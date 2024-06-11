@@ -1,0 +1,43 @@
+// Define the region of interest (ROI)
+var roi = ee.Geometry.Rectangle([-122.5, 37, -121.5, 38]);
+
+// Load Sentinel-2 image collection
+var collection = ee.ImageCollection('COPERNICUS/S2') //2015-present
+                   .filterDate('2022-01-01', '2022-12-31')
+                   .filterBounds(roi)
+                   .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE', 10));
+
+// Function to calculate NDVI
+function calculateNDVI(image) {
+    var ndvi = image.normalizedDifference(['B8', 'B4']).rename('NDVI');
+    return image.addBands(ndvi);
+}
+
+// Apply the NDVI function
+var withNDVI = collection.map(calculateNDVI);
+
+// Define visualization parameters
+var ndviParams = {
+    min: -1,
+    max: 1,
+    palette: ['blue', 'white', 'green']
+};
+
+// Create a composite and add to the map
+var ndviComposite = withNDVI.median().select('NDVI');
+Map.centerObject(roi, 10);
+Map.addLayer(ndviComposite, ndviParams, 'NDVI');
+
+// Create and print a time series chart
+var ndviTimeSeries = ui.Chart.image.series({
+    imageCollection: withNDVI.select('NDVI'),
+    region: roi,
+    reducer: ee.Reducer.mean(),
+    scale: 30
+}).setOptions({
+    title: 'NDVI Time Series',
+    vAxis: {title: 'NDVI'},
+    hAxis: {title: 'Date'}
+});
+
+print(ndviTimeSeries);
