@@ -38,4 +38,4 @@ Access the Code Editor on Google Earth Engine.
    6.2 Share the code on GitHub:
    Create a repository on GitHub and upload the code.
 
-This project demonstrates how to use Google Earth Engine to calculate and visualize NDVI for a specific region, as well as analyze the temporal variation of the vegetation index. Proper documentation and making the code available in a GitHub repository can make this project a valuable addition to your portfolio, showcasing your skills in geospatial data analysis.
+This project demonstrates how to use Google Earth Engine to calculate and visualize NDVI for a specific region, as well as analyze the temporal variation of the vegetation index. 
